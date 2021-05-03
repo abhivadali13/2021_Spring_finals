@@ -13,6 +13,8 @@ The NBA Draft Lottery determines the order that the 14 worst teams will select u
 
 A typical lottery ball machine is used to carry out the NBA Draft Lottery. 
 
+![image](https://user-images.githubusercontent.com/46533891/116900524-718c6000-abfe-11eb-857f-a59e68f07ff5.png)
+
 - Fourteen Ping Pong Balls (Numbered 1 to 14) are placed in a lottery machine.
 - Each 4 digit combination of the 14 balls is assigned to a certain team. There are a total of 1,001 possible combinations, of which 1 is discarded. 
   - The teams with the lowest records are assigned the most number of combinations based on their odds. 
