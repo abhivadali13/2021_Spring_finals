@@ -4,9 +4,8 @@
 
 The NBA Draft Lottery determines the order that the 14 worst teams will select upcoming talent in the NBA Draft. 
 
-- Every team is assigned a certain set of odds to pick #1 overall in the draft, with worse-performing teams having the highest chance. 
+- Every team is assigned a certain set of odds to pick #1 overall in the draft, with worse-performing teams having the higher chances. 
 - The worst three teams will have equal odds at selecting #1.
-- After the first four picks have been set, the remaining teams will pick in inverse order, based on standings. 
 
 A typical lottery ball machine is used to carry out the NBA Draft Lottery. 
 
