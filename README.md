@@ -43,7 +43,7 @@ In this project, I carry out the following steps:
 - Simulate the 1985 “frozen envelope” NBA Draft Lottery, and explore the popular conspiracy among the NBA media and NBA fans that this event was rigged by the NBA.
   - Some background on this event: https://www.si.com/longform/2015/1985/ewing/index.html
 
-![image](https://user-images.githubusercontent.com/46533891/116901056-13ac4800-abff-11eb-9f8d-d5d9f4818d16.png)
+![image](https://user-images.githubusercontent.com/46533891/116901247-4b1af480-abff-11eb-8776-2136d1dd50cc.png)
 
 ## Some Hypotheses:
 
