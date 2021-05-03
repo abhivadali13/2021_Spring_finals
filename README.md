@@ -1,4 +1,4 @@
-# 2021_Spring_finals
+# NBA Draft Lottery: A Monte Carlo Simulation
 
 All final assignments (projects) for IS597PR in Spring 2021 are expected to be forks from here.
 
