@@ -1,6 +1,6 @@
 # NBA Draft Lottery: A Monte Carlo Simulation
 
-Project Background:
+## Project Background:
 
 The NBA Draft Lottery determines the order that the 14 worst teams will select upcoming talent in the NBA Draft. 
 
