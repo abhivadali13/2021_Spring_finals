@@ -17,6 +17,22 @@ A typical lottery ball machine is used to carry out the NBA Draft Lottery.
 
 In the Drawing Process, for each combination drawn, the lottery machine is mixed for 20 seconds before drawing the first ball and 10 seconds before every subsequent ball. 
 
-- The team that has been assigned the combination that is drawn will receive the pick (1-4) in question
+- The team that has been assigned the combination that is drawn will receive the pick (1-4) in question.
 - If the same team was drawn twice, the result is discarded. If the unassigned sequence is drawn, the result is also discarded.
+
+For more information on this process, feel free to visit: https://www.nba.com/nba-draft-lottery-explainer.
+
+## Project Purpose:
+
+In this project, I carry out the following steps:
+
+- Replicate, and perform a Monte Carlo simulation of, the NBA Draft Lottery and calculate aggregate statistics of which teams are given which picks
+  - Do this using the ping-pong ball method outlined above and using a multinomial distribution.
+
+- Apply my own modifications to the NBA Draft Lottery.
+  - Run a simulation of the NBA Draft Lottery where balls are drawn for all the picks, rather than just the top 4.
+  - Include a randomly selected wild-card playoff team and invite them to participate in the lottery.
+
+- Simulate the 1985 “frozen envelope” NBA Draft Lottery, and explore the conspiracy that this event was rigged by the NBA.
+
 
