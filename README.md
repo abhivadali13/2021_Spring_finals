@@ -13,7 +13,7 @@ The NBA Draft Lottery determines the order that the 14 worst teams will select u
 
 A typical lottery ball machine is used to carry out the NBA Draft Lottery. 
 
-![image](https://user-images.githubusercontent.com/46533891/116900524-718c6000-abfe-11eb-857f-a59e68f07ff5.png)
+![image](https://user-images.githubusercontent.com/46533891/116900598-87018a00-abfe-11eb-9491-bbfd60310a51.png)
 
 - Fourteen Ping Pong Balls (Numbered 1 to 14) are placed in a lottery machine.
 - Each 4 digit combination of the 14 balls is assigned to a certain team. There are a total of 1,001 possible combinations, of which 1 is discarded. 
@@ -24,6 +24,8 @@ In the Drawing Process, for each combination drawn, the lottery machine is mixed
 
 - The team that has been assigned the combination that is drawn will receive the pick (1-4) in question.
 - If the same team was drawn twice, the result is discarded. If the unassigned sequence is drawn, the result is also discarded.
+
+![Screen Shot 2021-05-03 at 11 00 42 AM](https://user-images.githubusercontent.com/46533891/116900841-d47df700-abfe-11eb-8d4e-8b8e6a98cb38.png)
 
 For more information on this process, feel free to visit: https://www.nba.com/nba-draft-lottery-explainer.
 
