@@ -1,5 +1,9 @@
 # NBA Draft Lottery: A Monte Carlo Simulation
 
+## Project Video Presentation:
+
+https://mediaspace.illinois.edu/media/t/1_xrx7fo7d
+
 ## Project Background:
 
 The NBA Draft Lottery determines the order that the 14 worst teams will select upcoming talent in the NBA Draft. 
@@ -39,6 +43,26 @@ In this project, I carry out the following steps:
 - In a simulation of the NBA Draft Lottery 1000 times, the teams that are 5th-8th in the lottery will obtain a top-4 pick at least 25% of the time.
 - In a simulation of the modified NBA Draft Lottery 1000 times where ping pong balls are drawn for all the picks, at least 40% of the time, one of the three teams with the highest odds of getting the number #1 pick will drop down below pick #7. 
 - In a simulation of the 1985 NBA Draft Lottery 1000 times (accounting for the “frozen envelope”), the New York Knicks obtain the first-pick in the draft over 40% of the time.
+  - Some background on this event: https://www.si.com/longform/2015/1985/ewing/index.html
+
+## Random Variables:
+
+- The original NBA draft lottery can be translated to a Multinomial Distribution where every team is assigned a set of probabilities to land each of the 14 picks. 
+  - N successive independent trials are performed for each team to see which of the outcomes is the most likely.
+  - Based on this information, we can formulate the lottery order by observing which teams get which picks the most.
+
+- The modified NBA draft lottery with the wild-card team can be modeled using a Beta Distribution.
+  - Determine the odds with a prior that is set to the current median chance of getting the #1 pick (7% odds).
+  - This distribution will be fine-tuned with some data from actual simulations.
+  - The odds for the new playoff team will be determined from a random draw from this new distribution; the wild-card team can only get the #1 or #15 pick.
+  - The odds for the rest of the teams are adjusted based on this result.
+
+- The 1985 NBA Draft Lottery Conspiracy can be translated to the combination of a Bernoulli Random Trial + a Normal distribution.
+  - First, a Bernoulli trial is performed (70% success/30% failure). This indicating whether or not the league gets caught trying to rig the lottery before it happens
+    - If they do get caught (a failure result), the Knicks will be removed from the lottery and the odds will be redistributed to the other teams
+  - If they do not get caught, their odds are modeled as a normal distribution with a mean of 0.25 (representing their increased odds of winning the lottery versus other teams due to the "frozen envelope") and a large standard deviation, illustrating that the result has high variability, since rigging the lottery is very risky (greatly increased odds, or greatly decreased odds of obtaining the number one pick).
+
+
 
 
 
