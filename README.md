@@ -69,16 +69,14 @@ In this project, I carry out the following steps:
 
 - The original NBA draft lottery can be translated to a Multinomial Distribution where every team is assigned a set of probabilities to land each of the 14 picks. 
   - N successive independent trials are performed for each team to see which of the outcomes is the most likely.
-  - Based on this information, we can formulate the lottery order by observing which teams get which picks the most.
+  - The results for each team are independent of each other because each trial contains only the odds for each team of getting picks #1-#14.
 
-- The modified NBA draft lottery with the wild-card team can be modeled using a Beta Distribution.
-  - Determine the odds with a prior that is set to the current median chance of getting the #1 pick (7% odds).
-  - This distribution will be fine-tuned with some data from actual simulations.
-  - The odds for the new playoff team will be determined from a random draw from this new distribution; the wild-card team can only get the #1 or #15 pick.
-  - The odds for the rest of the teams are adjusted based on this result.
+- The modified NBA draft lottery with the wild-card team can be modeled using a Normal Distribution with mean 0.07 and standard deviation 0.035.
+  - The odds for the new playoff team will be determined from a random draw from this normal distribution
+  - The odds for a randomly selected team in the bottom-5 of the league is adjusted down based on this result.
 
 - The 1985 NBA Draft Lottery Conspiracy can be translated to the combination of a Bernoulli Random Trial + a Normal distribution.
   - First, a Bernoulli trial is performed (70% success/30% failure). This indicating whether or not the league gets caught trying to rig the lottery before it happens
-    - If they do get caught (a failure result), the Knicks will be removed from the lottery and the odds will be redistributed to the other teams
-  - If they do not get caught, their odds are modeled as a normal distribution with a mean of 0.25 (representing their increased odds of winning the lottery versus other teams due to the "frozen envelope") and a large standard deviation, illustrating that the result has high variability, since rigging the lottery is very risky (greatly increased odds, or greatly decreased odds of obtaining the number one pick).
+    - If they do get caught (a failure result), the Knicks lottery odds are moved down to 0.01 the rest of the odds will be redistributed to the other teams
+  - If they do not get caught, their odds are modeled as a normal distribution with a mean of 0.25 (representing their increased odds of winning the lottery versus other teams due to the "frozen envelope") and a large standard deviation of 0.1, illustrating that the result has high variability, since rigging the lottery is very risky (greatly increased odds, or only slightly increased odds of obtaining the number one pick).
 
