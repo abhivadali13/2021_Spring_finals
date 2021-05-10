@@ -1,8 +1,22 @@
 # NBA Draft Lottery: A Monte Carlo Simulation
 
+## Instructions:
+
+In order to use this simulator:
+
+ - clone this repository into your local machine
+ - open up the .ipynb files in Jupyter Notebook or upload the files to Google Drive and open the .ipynb files in Google Colab
+ - make sure all the files are in the same directory, and run
+
 ## Project Video Presentation:
 
 https://mediaspace.illinois.edu/media/t/1_xrx7fo7d
+
+## Project Files:
+
+- 'nbadraftlottery_functions.py': contains all the functions for the simulator + docstrings + doctests
+- 'nbadraftlottery-simulator.ipynb': only contains the user input section of the simulator, uses 'nbadraftlottery_functions.py' to abstract away functions and provide ease-of-use for the user
+- 'vadali_abhi_nbadraftlottery_montecarlosimulation.ipynb' contains all the functions + docstrings + main section + walkthrough of code with markdown as well...the most comprehensive file for first-time users to truly understand the code
 
 ## Project Background:
 
