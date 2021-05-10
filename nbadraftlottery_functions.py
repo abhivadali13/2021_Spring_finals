@@ -141,3 +141,289 @@ def odds_creator(simulation_type, iteration_counter, playoff_team, wild_card_odd
         odds_dictionary[playoff_team] = wild_card_odds
 
     return odds_dictionary, playoff_team, wild_card_odds
+
+
+def odds_assigner(ping_pong_combinations, discarded_combination, odds_dict):
+    """
+    This function assigns a certain number of combinations of ping pong balls to each team based on their odds.
+    We temporarily remove the unassigned ping pong ball from the list of ping pong ball combinations and
+    re-assign it back after. Then, we generate 1000 random numbers from 0 through 1000. Finally, we assign each
+    team their odds from this number
+    :param ping_pong_combinations: an array containing all the combinations of 14 choose 4 ping pong balls
+    :param discarded_combination: the one combination that is not assigned to a team
+    :param odds_dict: A dictionary that maps each their to their respective odds
+    :return: a resulting dictionary that maps each team to their combinations
+    """
+    ping_pong_combinations.remove(discarded_combination)
+    random_indices = random.sample(range(len(ping_pong_combinations)), 1000)
+    random_indices_length = len(random_indices)
+    combinations_dictionary = {}
+    for i in odds_dict.keys():
+        sample = int(odds_dict[i] * random_indices_length)
+        draw = random.sample(random_indices, sample)
+        for j in draw:
+            if draw[0] == j:
+                combinations_dictionary[i] = [ping_pong_combinations[j]]
+            else:
+                combinations_dictionary[i].append(ping_pong_combinations[j])
+            random_indices.remove(j)
+    ping_pong_combinations.append(discarded_combination)
+    return combinations_dictionary
+
+
+def ball_combination_picker():
+    """
+    This function simulates the selection of combinations of balls as done in the NBA Draft Lottery.
+    First, a list of numbers from 1-15 is created. Then, the balls are mixed for 1/100000 of the time they
+    are mixed in the actual NBA Draft Lottery. during this time, the list is shuffled and a random number is
+    chosen from the list. This represents the first ball drawn. This process is repeated until 4 balls are drawn.
+    :return: a list representing the 4 number combination that was drawn
+    """
+    ping_pong_balls = list(range(1, 15))
+    number_of_balls_picked = 0
+    ball_combination = []
+
+    while number_of_balls_picked < 4:
+        number_of_balls_picked += 1
+        start = time.time()
+        time.time()
+        elapsed = 0
+
+        if number_of_balls_picked == 1:
+            mixing_seconds = 0.0002
+        else:
+            mixing_seconds = 0.0001
+
+        while elapsed < mixing_seconds:
+            random.shuffle(ping_pong_balls)
+            elapsed = time.time() - start
+            print("Shuffling ping pong balls; ", elapsed, "seconds elapsed...")
+            time.sleep(.0001)
+        chosen_ball = random.choice(ping_pong_balls)
+        print("The chosen ball is: ", chosen_ball)
+        ball_combination.append(chosen_ball)
+        ping_pong_balls.remove(chosen_ball)
+
+    return ball_combination
+
+
+def team_selector(four_ball_combination, displaced_combination, teams_combinations):
+    """
+    Once the combination of balls is drawn, we must check which team has actually been assigned this combination.
+    In order to do this, we look at all the permuatations of the ball combination and compare it to the combination
+    assigned to each team and the unassigned combination to see which one the combination belongs to.
+    :param four_ball_combination: an array representing the four number combination that was chosen
+    :param displaced_combination: an array representing the combination that has not been assigned to a team
+    :param teams_combinations: a dictionary that maps each team to a set of combinations they've been assigned to
+    :return: the team that has been assigned the combination
+
+    >>> team = team_selector([1,2,3,4], [11,12,13,14], {'Houston Rockets': [(1,2,3,4)]})
+    >>> team == 'Houston Rockets'
+    True
+
+    >>> team = team_selector([1,2,3,4], [11,12,13,14], {'Minnesota Timberwolves': [(1,2,4,3)]})
+    >>> team == 'Minnesota Timberwolves'
+    True
+
+    >>> team = team_selector([1,2,5,4], [11,12,13,14], {'Minnesota Timberwolves': [(1,2,4,3)]})
+    >>> team != 'Minnesota Timberwolves'
+    True
+    """
+    ball_combinations = list(permutations(four_ball_combination, 4))
+    unassigned_four_ball_combinations = list(permutations(displaced_combination, 4))
+    for i in ball_combinations:
+        if i in unassigned_four_ball_combinations:
+            return ValueError
+
+        for j in teams_combinations:
+            if i in teams_combinations[j]:
+                return j
+
+
+def lottery_results(dictionary_combinations, combination_unassigned, input_user):
+    """
+    This function calls on the ball_combination_picker() and team_selector() methods to run a full simulation of
+    one NBA Draft Lottery. For the regular simulation, based on the first four teams that are assigned picks,
+    the simulator goes in order based on a list of the teams in order of odds that are remaining and assigns
+    them the picks 5-12. There are modifications for the other simulations involved, such as changing the number
+    of teams that are picked using ping pong balls.
+    :param dictionary_combinations: dictionary that maps each team to their assigned ball combinations
+    :param combination_unassigned: an array representing the unassigned ball combination
+    :param input_user: a user inputted string expressing what type of simulation this is
+    :return: a dictionary that maps each team to the pick that they've been given in the lottery
+    """
+    team_aggregate_stats = {}
+    team_order = 1
+    lottery_order = list(dictionary_combinations.keys())
+    pick_limit = 0
+
+    if input_user == 'r' or input_user == 'R' or input_user == 'w' or input_user == 'W':
+        pick_limit = 4
+        pick_number = 5
+
+    elif input_user == 'a' or input_user == 'A':
+        pick_limit = 14
+
+    while team_order <= pick_limit:
+        ball_combination = ball_combination_picker()
+        team = team_selector(ball_combination, combination_unassigned, dictionary_combinations)
+        print()
+
+        if team in lottery_order:
+            print("The number #", team_order, " pick in the 2021 NBA Draft goes to: ", team)
+            if team not in team_aggregate_stats:
+                team_aggregate_stats[team] = [team_order]
+            else:
+                team_aggregate_stats[team].append(team_order)
+            print()
+            lottery_order.remove(team)
+            team_order += 1
+
+    if input_user != 'a' and input_user != 'A':
+        if input_user == 'r' or input_user == 'R':
+            total_pick_limit = 14
+
+        elif input_user == 'w' or input_user == 'W':
+            total_pick_limit = 15
+
+        print()
+        print("Picks 5 -", total_pick_limit, "are in this order: ")
+        for j in lottery_order:
+            if pick_number != total_pick_limit:
+                print(j + ", ")
+            else:
+                print(j)
+
+            if j not in team_aggregate_stats:
+                team_aggregate_stats[j] = [pick_number]
+            else:
+                team_aggregate_stats[j].append(pick_number)
+            pick_number += 1
+
+    print('___________________')
+    return team_aggregate_stats
+
+
+def team_stats_calculator(team_stats):
+    """
+    This function uses the Counter function to count the number of times each team got each pick all the iterations
+    of the simulation are complete.
+    :param team_stats: A dictionary that maps each team to every pick that they received during the simulation
+    :return: a Counter object that maps each team to the counts of each pick that they received during the simulation
+
+    >>> cleaned_team_stats = team_stats_calculator({'Houston Rockets': [1, 2, 4, 6, 7]})
+    >>> cleaned_team_stats
+    {'Houston Rockets': Counter({1: 1, 2: 1, 4: 1, 6: 1, 7: 1})}
+
+    >>> cleaned_team_stats = team_stats_calculator({'Houston Rockets': [1, 2, 4, 6, 7], 'Minnesota Timberwolves': [1, 3, 3, 3, 3]})
+    >>> len(cleaned_team_stats['Minnesota Timberwolves']) == 2
+    True
+
+    >>> cleaned_team_stats = team_stats_calculator({'Houston Rockets': [1, 2, 4, 6, 7], 'Minnesota Timberwolves': [1, 3, 3, 3, 3]})
+    >>> len(cleaned_team_stats) == 4
+    False
+    """
+    formatted_team_stats = {}
+    for i in team_stats:
+        formatted_team_stats[i] = Counter(team_stats[i])
+    return formatted_team_stats
+
+
+def team_data_plotter(team_aggregate_data):
+    """
+    This function creates two lists, one that contains each team's names, and one that contains their associated
+    picks from the simulation...these are used to generate a plot that provides a visual understanding of the
+    simulation
+    :param team_aggregate_data: a dictionary that maps each team to the counts of the picks they received
+                                during the simulation
+    """
+    new_key = "Kings"
+    old_key = "Sacramento Kings"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Pistons"
+    old_key = "Detroit Pistons"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Cavs"
+    old_key = "Cleveland Cavaliers"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Rockets"
+    old_key = "Houston Rockets"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Wolves"
+    old_key = "Minnesota Timberwolves"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Magic"
+    old_key = "Orlando Magic"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Thunder"
+    old_key = "Oklahoma City Thunder"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Raptors"
+    old_key = "Toronto Raptors"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Bulls"
+    old_key = "Chicago Bulls"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Wizards"
+    old_key = "Washington Wizards"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Pelicans"
+    old_key = "New Orleans Pelicans"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Pacers"
+    old_key = "Indiana Pacers"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Warriors"
+    old_key = "Golden State Warriors"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    new_key = "Spurs"
+    old_key = "San Antonio Spurs"
+    if old_key in team_aggregate_data:
+        team_aggregate_data[new_key] = team_aggregate_data.pop(old_key)
+
+    team_list = []
+    pick_list = []
+    for i in team_aggregate_data:
+        for j in team_aggregate_data[i].items():
+            k = 0
+            while k < int(j[1]):
+                team_list.append(i)
+                pick_list.append(j[0])
+                k += 1
+
+    fig_dims = (20, 10)
+    fig, ax = plt.subplots(figsize=fig_dims)
+    x = team_list
+    y = pick_list
+    print('___________________')
+    print()
+    print("The following plot summarizes our simulations of the NBA Draft Lottery: ")
+    print()
+    sns.stripplot(x=x, y=y, alpha=0.5, s=10, linewidth=1.0, jitter=True)
+    plt.show()
