@@ -62,8 +62,11 @@ In this project, I carry out the following steps:
 ## Some Hypotheses:
 
 - In a simulation of the NBA Draft Lottery 1000 times, the teams that are 5th-8th in the lottery will obtain a top-4 pick at least 25% of the time.
+ - True
 - In a simulation of the modified NBA Draft Lottery 1000 times where ping pong balls are drawn for all the picks, at least 40% of the time, one of the three teams with the highest odds of getting the number #1 pick will drop down below pick #7. 
+ - True
 - In a simulation of the 1985 NBA Draft Lottery 1000 times (accounting for the “frozen envelope”), the New York Knicks obtain the first-pick in the draft over 40% of the time.
+ - False
 
 ## Random Variables:
 
