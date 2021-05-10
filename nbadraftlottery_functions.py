@@ -1,19 +1,13 @@
 # project setup
 
-import os
-import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from itertools import combinations, permutations
 from collections import Counter
 import random
-import warnings
 import time
-
-import scipy.stats as ss
 from numpy.random import multinomial
-from decimal import *
 
 
 def combinations_creator(simulation_type):
@@ -30,6 +24,14 @@ def combinations_creator(simulation_type):
 
     >>> combos, discarded = combinations_creator('r')
     >>> len(combos) == 1001
+    True
+
+    >>> combos, discarded = combinations_creator('w')
+    >>> len(combos) == 1001
+    True
+
+    >>> combos, discarded = combinations_creator('w')
+    >>> len(discarded) == 4
     True
     """
     if simulation_type == 'r' or simulation_type == 'w' or simulation_type == 'a':
@@ -427,3 +429,208 @@ def team_data_plotter(team_aggregate_data):
     print()
     sns.stripplot(x=x, y=y, alpha=0.5, s=10, linewidth=1.0, jitter=True)
     plt.show()
+
+
+def team_sim_data(team_info, sim_count, input_from_user):
+    """
+    This function takes our Counter dictionary and uses its values to obtain some summary statistics
+    for each team from our simulation. These statistics include: mean pick, standard deviation of pick,
+    highest pick and lowest pick. This function also tests our hypotheses laid out in the readme as well.
+    :param team_info: a dictionary that maps each team to the counts of the number of times they obtained each pick
+    :param sim_count: the number of times the simulation iterated
+    :param input_from_user: a user inputted string expressing what type of simulation this is
+    """
+    print()
+    print('The following statistics summarize our simulations of the NBA Draft Lottery: ')
+    print()
+    hypothesis_1_count = 0
+    hypothesis_1_indices = []
+    hypothesis_2_count = 0
+    hypothesis_2_indices = []
+    hypothesis_3_count = 0
+
+    for i in team_info:
+        picks = []
+        for j in team_info[i].items():
+            k = 0
+            while k < int(j[1]):
+                picks.append(j[0])
+                k += 1
+
+        print(i, "simulation statistics: ")
+        print()
+        print("Average Pick: " + str(np.mean(picks)))
+        print("Standard Deviation of Picks: " + str(np.std(picks)))
+        print("Lowest Pick: #" + str(np.max(picks)))
+        print("Highest Pick: #" + str(np.min(picks)))
+        print()
+
+        if input_from_user == 'r':
+            if (
+                    i == 'Oklahoma City Thunder' or i == 'Cleveland Cavaliers' or i == 'Sacramento Kings' or i == 'Toronto Raptors'):
+                for r, k in enumerate(picks):
+                    if k <= 4 and r not in hypothesis_1_indices:
+                        hypothesis_1_count += 1
+                        hypothesis_1_indices.append(i)
+
+        if input_from_user == 'a':
+            if i == 'Houston Rockets' or i == 'Minnesota Timberwolves' or i == 'Detroit Pistons':
+                for r, k in enumerate(picks):
+                    if k >= 7 and r not in hypothesis_2_indices:
+                        hypothesis_2_count += 1
+                        hypothesis_2_indices.append(i)
+
+        if input_from_user == 'o':
+            if i == 'New York Knicks':
+                for r in picks:
+                    if r == 1:
+                        hypothesis_3_count += 1
+
+    if input_from_user == 'r' or input_from_user == 'a' or input_from_user == 'o':
+        print('___________________')
+        print()
+        if input_from_user == 'r':
+            if hypothesis_1_count / (sim_count - 1) >= 0.25:
+                print("Hypothesis 1 is: True")
+            else:
+                print("Hypothesis 1 is: False")
+
+        elif input_from_user == 'a':
+            if hypothesis_2_count / (sim_count - 1) >= 0.40:
+                print("Hypothesis 2 is: True")
+            else:
+                print("Hypothesis 2 is: False")
+
+        elif input_from_user == 'o':
+            if hypothesis_3_count / (sim_count - 1) >= 0.40:
+                print("Hypothesis 3 is: True")
+            else:
+                print("Hypothesis 3 is: False")
+
+
+def multinomial_simulator(odds, counter):
+    """
+    This function iterates through the odds list for each team in the lottery. It then creates a multinomial
+    distribution and simulates the number of times each pick is awarded to each team out of a given number
+    of simulations.
+    :param odds: A list representing a team's chances of obtaining picks 1-14
+    :param counter: An integer representing how many times the simulation should iterate
+    """
+    print()
+    for i in odds:
+        simulations = multinomial(counter, odds[i])
+        for j in range(len(simulations)):
+            print(i + ' Pick %d: %d ' % (j + 1, simulations[j]))
+        print()
+
+
+def bernoulli_random_trial():
+    """
+    This function simply uses the numpy package for a random bernoulli trial with 0.7 success rate and
+    runs this one time. Then, it returns the results: either a 1 for success or a 0 for failure. This is used to determine
+    whether or not the NBA's attempt to rig the 1985 Lottery in favor of the Knicks is successful or not.
+    :return: a variable that represents a 0 for a failed attempt or a 1 for a successful attempt
+
+    >>> result = bernoulli_random_trial()
+    >>> result == 0 or result == 1
+    array([ True])
+    """
+    x = 1
+    success_rate = 0.7
+    Y = np.random.binomial(1, success_rate, x)
+    return Y
+
+
+def nba_rigging_odds(bernoulli_result):
+    """
+    This function determines the odds of each team winning the lottery. If the bernoulli trial was a success, a
+    normal random variable that results in odds that are larger than the original odds for the Knicks is used to
+    replace their original odds, then a randomly selected team loses the difference between these odds,
+    illustrating that the lottery was rigged. If the bernoulli trial was a failure, the Knicks' odds are brought
+    down to 0.001 and a randomly selected team gets the rest of their odds added.
+    :param bernoulli_result: a variable that represents a 0 for a failed attempt or a 1 for a successful attempt
+    :return: a list of the odds for each team to win the lottery
+    """
+    pacers_odds = 0.1429
+    clippers_odds = 0.1429
+    supersonics_odds = 0.1429
+    hawks_odds = 0.1429
+    kings_odds = 0.1429
+    warriors_odds = 0.1429
+
+    if bernoulli_result == 1:
+        print('The NBA was not caught attempting to rig the 1985 NBA Draft Lottery')
+        mu, sigma = 0.25, 0.1
+        knicks_odds = np.round(np.random.normal(mu, sigma, 1),
+                               3)  # using a normal dist. to determine odds of rigged knicks pick
+        while knicks_odds <= 0 or knicks_odds >= 0.2858 or knicks_odds <= 0.1429:  # knicks should not have non-positive odds or odds that will reduce other teams' odds to negative values
+            knicks_odds = np.round(np.random.normal(mu, sigma, 1), 3)
+        randomizer = random.randint(1, 6)
+        if randomizer == 1:
+            pacers_odds -= (knicks_odds - 0.1429)
+        elif randomizer == 2:
+            clippers_odds -= (knicks_odds - 0.1429)
+        elif randomizer == 3:
+            supersonics_odds -= (knicks_odds - 0.1429)
+        elif randomizer == 4:
+            hawks_odds -= (knicks_odds - 0.1429)
+        elif randomizer == 5:
+            kings_odds -= (knicks_odds - 0.1429)
+        else:
+            warriors_odds -= (knicks_odds - 0.1429)
+        print('The New York Knicks rigged odds are now:', knicks_odds)
+        print()
+
+    else:
+        print('The NBA was caught attempting to rig the 1985 NBA Draft Lottery')
+        knicks_odds = 0.01
+        randomizer = random.randint(1, 6)
+        if randomizer == 1:
+            pacers_odds += (0.1429 - knicks_odds)
+        elif randomizer == 2:
+            clippers_odds += (0.1429 - knicks_odds)
+        elif randomizer == 3:
+            supersonics_odds += (0.1429 - knicks_odds)
+        elif randomizer == 4:
+            hawks_odds += (0.1429 - knicks_odds)
+        elif randomizer == 5:
+            kings_odds += (0.1429 - knicks_odds)
+        else:
+            warriors_odds += (0.1429 - knicks_odds)
+        print('The New York Knicks odds after punishment are now:', knicks_odds)
+        print()
+
+    return [knicks_odds, pacers_odds, clippers_odds, supersonics_odds, hawks_odds, kings_odds, warriors_odds]
+
+
+def nba_1985_draft_lottery_simulator(team_odds):
+    """
+    Given the odds for each team, a multinomial distribution is used to determine the 1st pick, then the 2nd pick,
+    and so on, all the way to the fifth pick. Then, the final two picks in the lottery are filled in manually.
+    The resulting pick for each team is then added to a dictionary, in which the key is the team name and the value
+    is the pick, and this dictionary is returned.
+    :param team_odds: a list representing the odds for all the teams in the lottery of getting the number #1 pick
+    :return: a dictionary that maps each team to their pick
+    """
+    team_list = ['New York Knicks', 'Indiana Pacers', 'Los Angeles Clippers', 'Seattle SuperSonics', 'Atlanta Hawks',
+                 'Sacramento Kings', 'Golden State Warriors']
+    pick_list = []
+    pick_number = 1
+    while pick_number <= 5:
+        simulations = multinomial(1, team_odds)
+        pick_list.append(team_list[np.argmax(simulations)])
+        team_odds.pop(np.argmax(simulations))
+        team_list.pop(np.argmax(simulations))
+        pick_number += 1
+
+    for i in team_list:
+        if i not in pick_list:
+            pick_list.append(i)
+
+    pick_dictionary = {}
+    for i, value in enumerate(pick_list):
+        pick_dictionary[value] = [i + 1]
+        print("The number #", i + 1, "pick in the 1985 NBA Draft goes to:", value)
+
+    print()
+    return pick_dictionary
