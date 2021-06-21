@@ -8,10 +8,6 @@ In order to use this simulator:
  - open up the .ipynb files in Jupyter Notebook or upload the files to Google Drive and open the .ipynb files in Google Colab
  - make sure all the files are in the same directory, and run
 
-## Project Video Presentation:
-
-https://mediaspace.illinois.edu/media/t/1_xrx7fo7d
-
 ## Project Files:
 
 - 'nbadraftlottery_functions.py': contains all the functions for the simulator + docstrings + doctests
